@@ -2,7 +2,7 @@
 /*
 Plugin Name: Items Custom Fields
 Description: Manage Custom Fields For The Item Manager & Displayer
-Version: 1.3
+Version: 1.4
 Author: PyC
 Author URI: http://profileyourcity.com
 Modified Version Of Mvlcek's Plugin
@@ -25,7 +25,7 @@ $item_title = "Item";
 register_plugin(
     $thisfile,
   'Custom Fields For Items',
-  '1.3',
+  '1.4',
   'PYC',
   'http://profileyourcity.com/',
   'Manages Custom Fields For The Items Manager - Modified Version of Mvlcek\'s Plugin',

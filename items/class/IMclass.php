@@ -210,8 +210,8 @@ class ItemsManager
 	public function processItem()
 	{ 
 		$id = clean_urls(to7bits($_POST['post-title'], "UTF-8"));
-		$orig_file = ITEMDATA . $_POST['id'] . '.xml';
 		$file = ITEMDATA . $id . '.xml';
+		$orig_file = ITEMDATA . $_POST['id'] . '.xml';
 		if(file_exists($orig_file) && $id != $_POST['id'])
 		{
 			unlink($orig_file);

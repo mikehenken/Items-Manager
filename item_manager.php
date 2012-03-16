@@ -3,7 +3,7 @@
 /*
 Plugin Name: Item Manager
 Description: Full Featured Items Manager.
-Version: 1.3
+Version: 1.4
 Author: PyC
 Author URI: http://profileyourcity.com/
 */
@@ -37,7 +37,7 @@ define('IMTITLE', $item_title);
 register_plugin(
   $thisfile,
   'Item Manager',
-  '1.3',
+  '1.4',
   'PyC',
   'http://profileyourcity.com/',
   'Full Featured Item Manager',
