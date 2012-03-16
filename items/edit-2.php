@@ -100,12 +100,12 @@
 	        defaultLanguage : '<?php echo $EDLANG; ?>',
 	        entities : false,
 	        uiColor : '#FFFFFF',
-		height: '200px',
-		baseHref : '<?php echo $SITEURL; ?>',
+	        height: '200px',
+	        baseHref : '<?php echo $SITEURL; ?>',
 	        toolbar : [ <?php echo $toolbar; ?> ],
-			    <?php echo $EDOPTIONS; ?>
-		filebrowserBrowseUrl : 'filebrowser.php?type=all',
-		filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
+	        <?php echo $EDOPTIONS; ?>
+	        filebrowserBrowseUrl : 'filebrowser.php?type=all',
+	        filebrowserImageBrowseUrl : 'filebrowser.php?type=images',
 	        filebrowserWindowWidth : '730',
 	        filebrowserWindowHeight : '500'
     })
