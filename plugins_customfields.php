@@ -25,7 +25,7 @@ $item_title = "Item";
 register_plugin(
     $thisfile,
   'Custom Fields For Items',
-  '1.0',
+  '1.3',
   'PYC',
   'http://profileyourcity.com/',
   'Manages Custom Fields For The Items Manager - Modified Version of Mvlcek\'s Plugin',
