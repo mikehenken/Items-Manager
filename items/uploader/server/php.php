@@ -61,16 +61,14 @@ class qqUploadedFileForm {
 
 class qqFileUploader {
     private $allowedExtensions = array();
-    private $sizeLimit = 10485760;
+    private $sizeLimit;
     private $file;
 
-    function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760){        
+    function __construct(array $allowedExtensions = array(), $sizeLimit = '10M'){        
         $allowedExtensions = array_map("strtolower", $allowedExtensions);
             
         $this->allowedExtensions = $allowedExtensions;        
-        $this->sizeLimit = $sizeLimit;
-        
-        $this->checkServerSettings();       
+        $this->sizeLimit = $this->return_bytes($sizeLimit);  
 
         if (isset($_GET['qqfile'])) {
             $this->file = new qqUploadedFileXhr();
@@ -79,16 +77,6 @@ class qqFileUploader {
         } else {
             $this->file = false; 
         }
-    }
-    
-    private function checkServerSettings(){        
-        $postSize = $this->toBytes(ini_get('post_max_size'));
-        $uploadSize = $this->toBytes(ini_get('upload_max_filesize'));        
-        
-        if ($postSize < $this->sizeLimit || $uploadSize < $this->sizeLimit){
-            $size = max(1, $this->sizeLimit / 1024 / 1024) . 'M';             
-            die("{'error':'increase post_max_size and upload_max_filesize to $size'}");    
-        }        
     }
     
     private function toBytes($str){
@@ -142,19 +130,43 @@ class qqFileUploader {
         }
 
         if ($this->file->save($uploadDirectory . $filename . '.' . $ext)){
-            return array('success'=>true, 'newFilename'=>$filename. '.' . $ext);
+            return array('success'=>true, 'fileName'=>$filename, 'newFilename'=>$filename. '.' . $ext);
         } else {
             return array('error'=> 'Could not save uploaded file.' .
                 'The upload was cancelled, or server error encountered');
         }
 
     }
+
+    public function return_bytes($val) {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+        return $val;
+    }
 }
 
 // list of valid extensions, ex. array("jpeg", "xml", "bmp")
 $allowedExtensions = array();
 // max file size in bytes
-$sizeLimit = 10 * 1024 * 1024;
+$postSizeLimit = ini_get('post_max_size');
+$uploadSizeLimit = ini_get('upload_max_filesize');
+if($postSizeLimit < $uploadSizeLimit)
+{
+    $sizeLimit = $postSizeLimit;
+}
+else
+{
+    $sizeLimit = $uploadSizeLimit;
+}
 
 $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 $result = $uploader->handleUpload('../../../../data/uploads/items/');
