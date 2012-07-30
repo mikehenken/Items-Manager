@@ -1,6 +1,6 @@
 # Items Manager
 
-A [GetSimple CMS](http://get-simple.info/) plugin by Mike Henken.
+A [GetSimple CMS](http://get-simple.info/) plugin by [Mike Henken](https://mikehenken.com).
 
 Products, services, custom fields, and categories for GetSimple.
 
