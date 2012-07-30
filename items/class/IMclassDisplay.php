@@ -2,11 +2,12 @@
 class DisplayImItems
 {
 	public $tags;
+	public static $sortBy;
 	
 	public function __construct()
 	{
 		//include common file
-		require_once(GSPLUGINPATH.'items/common.php');
+		require_once(GSPLUGINPATH.'items/inc/common.php');
 		
 		//set all custom fields available
 		$this->getAllImCustomFields();
@@ -18,14 +19,17 @@ class DisplayImItems
 	//Get all custom fields created
 	public function getAllImCustomFields()
 	{
-		if (file_exists(GSDATAOTHERPATH.'plugincustomfields.xml')){
+		if (file_exists(GSDATAOTHERPATH.'plugincustomfields.xml'))
+		{
 			$file=GSDATAOTHERPATH."plugincustomfields.xml";
 			$i=0;
 			$thisfile = file_get_contents($file);
 			$data = simplexml_load_string($thisfile);
 			$components = $data->item;
-			if (count($components) != 0) {
-				foreach ($components as $component) {
+			if (count($components) != 0) 
+			{
+				foreach ($components as $component) 
+				{
 					$key=$component->desc;
 					//$tags['$key']['test']=$component->label;
 					$this->tags[(string)$key] =$key;
@@ -33,11 +37,13 @@ class DisplayImItems
 					$this->tags[(string)$key]['label']=(string)$component->label;
 					$this->tags[(string)$key]['type']=(string)$component->type;
 					// for furture use
-					if ($component->type=="dropdown"){
+					if ($component->type=="dropdown")
+					{
 						// do dropdown
 						$this->tags[(string)$key]['options']=array();
 						$options=$component->option;
-						foreach ($options as $option) {
+						foreach ($options as $option) 
+						{
 							$this->tags[(string)$key]['options'][]=(string)$option;
 						}
 					}
@@ -51,75 +57,149 @@ class DisplayImItems
 	//get custom fields from idividual item's xml file
 	public function getCustomfields()
 	{
-		  if(isset($_GET['item'])) {
-		  global $date;
-		  $file =  ITEMDATA . $_GET['item'] . '.xml';
-		  if(file_exists($file)){
-		  $date = getXML($file);
-		  
-			 while (list($key, $val) = each($this->tags))
-			 {
-				$this->tags[$key]['value']=(string)$date->{$key};
-			 }
-		  }
+		if(isset($_GET['item'])) 
+		{
+			global $date;
+			$file =  ITEMDATA . $_GET['item'] . '.xml';
+			if(file_exists($file))
+			{
+				$date = getXML($file);
+				while (list($key, $val) = each($this->tags))
+				{
+					$this->tags[$key]['value']=(string)$date->{$key};
+				}
+			}
 		}
 	}
 	
 	//Returns the data for custom field passed to function
 	public function GetField($tag)
 	{
-			global $SITEURL;
-			if (isset($_GET['item']) && file_exists(ITEMDATA.$_GET['item'].'.xml')){
-			 if($tag == "title")
-			  {	$post_item = $_GET['item'];
-				  $title_data = getXML(ITEMDATA.$post_item.'.xml');
-				   return $title_data->title;
-			  //	echo $post_item;
-			 }
-			 elseif ($this->tags[$tag]['type'] == "textarea")
-			  {
-				  $the_tag_content = $this->tags[$tag]['value'];
-				  $the_tag_content = strip_decode($the_tag_content);
-				  return $the_tag_content;
-			 }
-			 elseif($this->tags[$tag]['type'] == "uploader")
-			  {
-				 return $SITEURL.'data/uploads/items/'.$this->tags[$tag]['value'];
-			 }
-			 else
-			  {
-				  return $this->tags[$tag]['value'];
-			 }
-
+		global $SITEURL;
+		if (isset($_GET['item']) && file_exists(ITEMDATA.$_GET['item'].'.xml'))
+		{
+			if($tag == "title")
+			{	
+				$post_item = $_GET['item'];
+				$title_data = getXML(ITEMDATA.$post_item.'.xml');
+				return $title_data->title;
+				//	echo $post_item;
 			}
+			elseif ($this->tags[$tag]['type'] == "textarea")
+			{
+				$the_tag_content = $this->tags[$tag]['value'];
+				$the_tag_content = strip_decode($the_tag_content);
+				return $the_tag_content;
+			}
+			elseif($this->tags[$tag]['type'] == "uploader")
+			{
+				return $SITEURL.'data/uploads/items/'.$this->tags[$tag]['value'];
+			}
+			else
+			{
+				return $this->tags[$tag]['value'];
+			}
+		}
 	}
 	
 	//get and filter all items
-	private function filterAllItems()
+	private function filterAllItems($node=null)
 	{
 		$pages = array();
 		$itemdir = ITEMDATA;
 		$dir_handle = @opendir($itemdir);
-		while ($filename = readdir($dir_handle)) {
-		  if (strrpos($filename,'.xml') === strlen($filename)-4) {
-			$data = getXML($itemdir . $filename);
-			if (isset($data->visible)) {
-			$visible = $data->visible;
-			}
-			else {$visible = true;}
+		$count = 0;
+		while ($filename = readdir($dir_handle)) 
+		{
+			if (strrpos($filename,'.xml') === strlen($filename)-4) 
+			{
+				$data = getXML($itemdir . $filename);
+				if (isset($data->visible)) 
+				{
+					$visible = $data->visible;
+				}
+				else 
+				{
+					$visible = true;
+				}
 
-			if (isset($data->promo)) {
-			$promo = $data->promo;
-			}
-			else {$promo = true;}
+				if (isset($data->promo)) 
+				{
+					$promo = $data->promo;
+				}
+				else 
+				{
+					$promo = true;
+				}
 
-			$pages[] = array('name' => (string) $filename, 'category' => (string) $data->category, 'visible' => $visible, 'promo' => $promo);
-		  }
+				$pages[$count] = array('name' => (string) $filename, 
+								 'category' => (string) $data->category, 
+								 'visible' => (string) $visible, 
+								 'promo' => (string) $promo);
+				if(!is_null($node))
+				{
+					if(is_numeric($data->$node))
+					{
+						$pages[$count][$node] = (int) $data->$node;
+					}
+					else
+					{
+						$pages[$count][$node] = (string) $data->$node;
+					}
+				}
+				$count++;
+			}
 		}
-		asort($pages);
-		// sort by user function:
+		//echo 'Pages: <pre>'.print_r($pages,true).'</pre>';
+		if(is_null($node))
+		{
+			asort($pages);
+		}
+		else
+		{
+			self::$sortBy = $node;
+			usort($pages, array($this, 'sortArray'));
+		}
 		return $pages;
 	}
+
+
+	/** 
+	* Sorts dates of blog posts (launched through usort function)
+	* 
+	* @param $a $b array the data to be sorted (from usort)
+	* @return bool
+	*/  
+	public function sortArray($a, $b)
+	{
+       	$sortBy = self::$sortBy; //access meta data
+       	//echo $sortBy;
+       	$a = $a[$sortBy];
+       	$b = $b[$sortBy];
+		if(is_numeric($a))
+		{
+			if ($a == $b) 
+			{ 
+				return 0; 
+			} 
+			else
+			{  
+				if($a<$b) 
+				{ 
+					return 1; 
+				} 
+				else 
+				{ 
+					return -1; 
+				} 
+			} 
+		}
+		else
+		{
+			 return strcmp($a, $b);
+		}
+	}
+
 	
 	//print all items
 	public function printAllItems($page)
@@ -190,9 +270,9 @@ class DisplayImItems
 		}
 	}
 	
-	public function getAllItems()
+	public function getAllItems($node=null)
 	{
-		$pages = $this->filterAllItems();
+		$pages = $this->filterAllItems($node);
 		if(count($pages) > 0)
 		{
 			foreach ($pages as $page) 
@@ -214,23 +294,6 @@ class DisplayImItems
 		{
 			echo '<p>Sorry, your search returned no hits.</p>';
 		}	
-	}
-	
-	//Show categories for sidebar
-	public function showCategories()
-	{
-		global $SITEURL;
-		if(file_exists(ITEMSFILE))
-		{
-			$category_file = getXML(ITEMSFILE);
-			foreach($category_file->categories->category as $the_fed)
-			{	
-				$category = $the_fed;
-				$url = $SITEURL.$item_file_url."/?category=$category";
-				echo "<li><a href=\"$url\">$category</a></li>";
-			}
-			echo '<br/><li><a href="'.$SITEURL.$item_file_url.'/">View All Categories</a></li>';
-		}
 	}
 }
 ?>

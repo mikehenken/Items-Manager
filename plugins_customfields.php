@@ -37,7 +37,7 @@ i18n_merge('items') || i18n_merge('items', 'en_US');
 
 add_action('header', 'items_customfields_header');            // add hook to create styles for custom field editor.
 
-require_once(GSPLUGINPATH.'items/common.php');
+require_once(GSPLUGINPATH.'items/inc/common.php');
 
 $im_customfield_def = null;
 
@@ -75,5 +75,5 @@ function items_customfields_header() {
 <?php
 }
 function items_customfields_configure(){
-  include(GSPLUGINPATH.'items/configure-2.php');
+  include(GSPLUGINPATH.'items/inc/configure-2.php');
 }
