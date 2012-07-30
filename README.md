@@ -4,13 +4,12 @@ A [GetSimple CMS](http://get-simple.info/) plugin by Mike Henken.
 
 Products, services, custom fields, and categories for GetSimple.
 
+- **Downloads:** 53 (from a 2012 Wayback Machine capture of GetSimple Extend version 1.1, not a live count)
 - **Last updated:** January 29, 2012
 - **Version:** 1.1
 - **Compatible with:** GetSimple 3.0 - 3.1 Beta
 - **Support:** http://get-simple.info/forum/topic/2507/items-manager-ver-09/
-- **Archive:** https://web.archive.org/web/20110924035654/http://get-simple.info/extend/plugin/items-manager/301/
-
-The Wayback capture above is from 24 September 2011 (53 downloads at that date). Later Extend captures were not retrieved, so this README does not present 53 as a current figure.
+- **Archive:** https://web.archive.org/web/2012/http://get-simple.info/extend/plugin/items-manager/301/
 
 ## Description
 
